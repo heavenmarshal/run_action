@@ -1,0 +1,36 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    run-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: build docker image
+        run: |
+          docker build -t run-action .
+      - name: save images to files
+        run: |
+          mkdir dist
+          docker save run-action | gzip > dist/run-action-img.tar.gz
+      - uses: actions/upload-artifact@v2
+        with:
+          name: run-action-image
+          path: dist
+    
+  run:
+    run-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: run-action-image
+          path: dist
+      - name: load image
+        run: |
+          gzip --dcompress --standout dist/run-action-img.tar.gz | docker load
+      - name: run app
+        run:
+          docker run run-action python app.py
+          
