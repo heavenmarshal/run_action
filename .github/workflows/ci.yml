@@ -29,7 +29,7 @@ jobs:
           path: dist
       - name: load image
         run: |
-          gzip --dcompress --stdout dist/run-action-img.tar.gz | docker load
+          gzip --decompress --stdout dist/run-action-img.tar.gz | docker load
       - name: run app
         run:
           docker run run-action python app.py
