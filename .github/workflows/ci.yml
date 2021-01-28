@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: build docker image
@@ -20,7 +20,7 @@ jobs:
           path: dist
     
   run:
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: actions/download-artifact@v2
