@@ -3,7 +3,7 @@ services:
   integration:
     image: run-action:latest
     volumes:
-      - ${PWD}/config/config.json:/etc/python-app-config/config.json
+      - ./config:/etc/python-app-config
     working_dir: /app
     command:
       - python
