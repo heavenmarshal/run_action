@@ -18,21 +18,6 @@ jobs:
         with:
           name: run-action-image
           path: dist
-    
-  run:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/download-artifact@v2
-        with:
-          name: run-action-image
-          path: dist
-      - name: load image
-        run: |
-          gzip --decompress --stdout dist/run-action-img.tar.gz | docker load
-      - name: run app
-        run:
-          docker run run-action python app.py
   integration:
     runs-on: ubuntu-latest
     needs: build
@@ -45,22 +30,9 @@ jobs:
       - name: load image
         run: |
           gzip --decompress --stdout dist/run-action-img.tar.gz | docker load
-      - name: integration-build
-        run: |
-          docker build -t run-integration integration -f integration/Dockerfile \
-          --build-arg BASE_IMAGE=run-action --build-arg SOME_TOKEN=${{ secrets.SOME_TOKEN }}
       - name: run integration
         run:
-          docker run run-integration python integration.py
-      - name: docker login
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: push
-        run: |
-          docker tag run-integration heavenmarshal/run-integration
-          docker push heavenmarshal/run-integration
+          docker-compose -f integration/docker-compose.yml run integration
         
           
           

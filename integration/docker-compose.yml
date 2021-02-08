@@ -1,0 +1,10 @@
+version: '3'
+services:
+  integration:
+    image: run-action:latest
+    volumes:
+      - ${PWD}/config/config.json:/etc/python-app-config/config.json
+    workdir: /app
+    command:
+      - python
+      - app.py
